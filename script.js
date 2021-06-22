@@ -27,6 +27,7 @@ for(let i = 0; i < 256; i++) {
 container.setAttribute('style', 'display: grid; grid-template-rows: repeat(16, 1fr); grid-template-columns: repeat(16, 1fr);');
 for(let i = 0; i < 256; i++) {
     const div = document.createElement('div');
-    div.setAttribute('style', 'height: 100%; width: 100%; background-color: red;');
+    div.setAttribute('style', ' background-color: red;');
+    div.addEventListener('mouseenter', () => div.setAttribute('style', 'height: 100%; width: 100%; background-color: black;'));
     container.appendChild(div);
 }
