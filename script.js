@@ -1,6 +1,6 @@
 const container = document.querySelector('#container');
-// const divs = container.querySelectorAll('div');
-const button = document.querySelector('button');
+
+// GRID METHODS
 // float/clear
 /* for(let i = 0; i < 256; i++) {
     const div = document.createElement('div');
@@ -32,31 +32,59 @@ for(let i = 0; i < 256; i++) {
     container.appendChild(div);
 } */
 
-// divs.forEach(div => div.addEventListener('mouseenter', () => div.setAttribute('style', 'height: 100%; width: 100%; background-color: black;')));
-
-function createGrid(size) {
+function createGrid(size, colorType) {
     container.setAttribute('style', `display: grid; grid-template-rows: repeat(${size}, 1fr); grid-template-columns: repeat(${size}, 1fr);`);
     for(let i = 0; i < size * size; i++) {
         const div = document.createElement('div');
-        div.setAttribute('style', 'height: 100%; width: 100%; background-color: red;');
+        div.setAttribute('style', 'height: 100%; width: 100%; opacity: 0;');
         container.appendChild(div);
     }
     const divs = container.querySelectorAll('div');
-    divs.forEach(div => div.addEventListener('mouseenter', () => div.setAttribute('style', 'height: 100%; width: 100%; background-color: black;')));
+    if(colorType === "Black") {
+        divs.forEach(div => div.addEventListener('mouseenter', () => div.setAttribute('style', 'height: 100%; width: 100%; background-color: black;')));
+    } else if(colorType === "Random RGB") {
+        divs.forEach(div => div.addEventListener('mouseenter', () => div.setAttribute('style', `height: 100%; width: 100%; background-color: rgb(${Math.random() * 256}, ${Math.random() * 256}, ${Math.random() * 256})`)));
+    } else {
+        divs.forEach(div => div.addEventListener('mouseenter', () => {
+            if(parseFloat(div.style.opacity) < 1) {
+                div.setAttribute('style', `height: 100%; width: 100%; background-color: black; opacity: ${parseFloat(div.style.opacity) + 0.1};`);
+            }
+        }));
+    }
 }
 
-createGrid(16);
+createGrid(16, "Black");
 
-button.addEventListener('click', () => {
+let newSize = 0;
+
+const clear = document.querySelector('#clear');
+clear.addEventListener('click', () => {
     const divs = container.querySelectorAll('div');
-    divs.forEach(div => div.setAttribute('style', 'height: 100%; width: 100%; background-color: red;'));
-    const newSize = parseInt(prompt('Select size of new grid'));
-/*     container.setAttribute('style', `display: grid; grid-template-rows: repeat(${newSize}, 1fr); grid-template-columns: repeat(${newSize}, 1fr);`);
-    for(let i = 0; i < newSize * newSize; i++) {
-        const div1 = document.createElement('div');
-        div1.setAttribute('style', 'height: 100%; width: 100%; background-color: red;');
-        div1.addEventListener('mouseenter', () => div1.setAttribute('style', 'height: 100%; width: 100%; background-color: black;'));
-        container.appendChild(div1);
-    } */
-    createGrid(newSize);
+    divs.forEach(div => container.removeChild(div));
+    newSize = parseInt(prompt('Select size of new grid (between 1-100)'));
+    createGrid(newSize, "Black");
+});
+
+const black = document.querySelector('#black');
+black.addEventListener('click', () => {
+    const divs = container.querySelectorAll('div');
+    divs.forEach(div => container.removeChild(div));
+    const currentSize = newSize || 16;
+    createGrid(currentSize, "Black");
+});
+
+const random = document.querySelector('#random');
+random.addEventListener('click', () => {
+    const divs = container.querySelectorAll('div');
+    divs.forEach(div => container.removeChild(div));
+    const currentSize = newSize || 16;
+    createGrid(currentSize, "Random RGB");
+});
+
+const grayscale = document.querySelector('#grayscale');
+grayscale.addEventListener('click', () => {
+    const divs = container.querySelectorAll('div');
+    divs.forEach(div => container.removeChild(div));
+    const currentSize = newSize || 16;
+    createGrid(currentSize, "Grayscale");
 });
